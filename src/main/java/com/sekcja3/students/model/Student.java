@@ -10,27 +10,17 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Student {
 
-    // more validations on pdf from section 3 @@@@@@@@@@@@@@@@
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // walidacja podczas zapisu do bazy danych na encji,
-    // samo not null 500, z adnotacją Valid już 400 bład po stronei klienta,
-    //message zmiana domyślnej wiadomości w kodzie błedu 400
-//    @NotNull(message = "Field can not be empty")
-    @NotNull(message = "Name cannot be null") // must be present in json but can be empty
+    @NotNull(message = "Name cannot be null")
     private String firstName;
 
-    @NotEmpty(message = "last name can't be empty") // at least white space
+    @NotEmpty(message = "last name can't be empty")
     private String lastName;
-//    @NotBlank any character
-    // Pattern(regexp = "[1]a]") customowy regexp
-    @Email // email validation
+    @Email
     private String email;
-
 
     public Long getId() {
         return id;
