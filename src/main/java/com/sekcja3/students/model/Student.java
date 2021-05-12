@@ -8,10 +8,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@SequenceGenerator(name = "seqIdGen", initialValue = 200000, allocationSize = 1)
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "seqIdGen")
     private Long id;
 
     @NotNull(message = "Name cannot be null")
@@ -19,7 +20,10 @@ public class Student {
 
     @NotEmpty(message = "last name can't be empty")
     private String lastName;
+
+    @NotBlank
     @Email
+    @Column(unique = true) // validacja uniklanosci maila
     private String email;
 
     public Long getId() {
