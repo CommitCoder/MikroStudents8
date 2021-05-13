@@ -28,9 +28,19 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAll();
     }
 
+
+    private void validateStudentEmailExists(Student student){
+        if(studentRepository.existsByEmail(student.getEmail())){
+            throw new StudentException(StudentError.STUDENT_ALREADY_EXISTS);
+        }
+    }
+
+
     @Override
     public Student addStudent(Student student) {
+      validateStudentEmailExists(student);
         return studentRepository.save(student);
+
     }
 
     @Override
@@ -44,6 +54,7 @@ public class StudentServiceImpl implements StudentService {
     public Student putStudent(Long id, Student student) {
         return studentRepository.findById(id)
             .map(studentFromDb -> {
+                validateStudentEmailExists(student);
                 studentFromDb.setFirstName(student.getFirstName());
                 studentFromDb.setLastName(student.getLastName());
                 studentFromDb.setEmail(student.getEmail());

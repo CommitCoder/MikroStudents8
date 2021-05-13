@@ -12,21 +12,7 @@ import java.util.List;
 @Repository  //  extends JpaRepository  ->  tak naprawdę @Repository nie jest potrzebne ale dla czytelności
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    boolean existsByEmail(String email);
 
 
 
