@@ -14,10 +14,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     boolean existsByEmail(String email);
 
+    List<Student> findAllByStatus(Student.Status status);
 
 
-
-    // BUDNY KOD ale można popatrzeć na przykłady
+    // BRUDNY KOD ale można popatrzeć na przykłady
 
 
 //     ctrl + spacja dużo fajnych podpowiedzi do nazw metod z JPA Repo

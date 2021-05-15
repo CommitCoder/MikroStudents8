@@ -26,6 +26,15 @@ public class Student {
     @Column(unique = true) // validacja uniklanosci maila
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Status status;
+
+    public enum Status{
+        ACTIVE,
+        INACTIVE
+    }
+
     public Long getId() {
         return id;
     }
@@ -56,5 +65,13 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

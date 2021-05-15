@@ -20,14 +20,21 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudent(Long id) {
-        return studentRepository.findById(id).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
+        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
+        if(Student.Status.INACTIVE.equals(student.getStatus())){
+            throw new StudentException(StudentError.STUDENT_IS_NOT_ACTIVE);
+        }else{
+            return student;
+        }
     }
 
     @Override
-    public List<Student> getStudents() {
+    public List<Student> getStudents(Student.Status status) {
+        if(status != null){
+            return studentRepository.findAllByStatus(status);
+        }
         return studentRepository.findAll();
     }
-
 
     private void validateStudentEmailExists(Student student){
         if(studentRepository.existsByEmail(student.getEmail())){
@@ -47,17 +54,22 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudent(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
-        studentRepository.delete(student);
+        student.setStatus(Student.Status.INACTIVE);
+        studentRepository.save(student);
     }
 
     @Override
     public Student putStudent(Long id, Student student) {
         return studentRepository.findById(id)
             .map(studentFromDb -> {
-                validateStudentEmailExists(student);
+
+                if(studentRepository.existsByEmail(student.getEmail()) && !studentFromDb.getEmail().equals(student.getEmail())   ){
+                    throw new StudentException(StudentError.STUDENT_ALREADY_EXISTS);
+                }
                 studentFromDb.setFirstName(student.getFirstName());
                 studentFromDb.setLastName(student.getLastName());
                 studentFromDb.setEmail(student.getEmail());
+                studentFromDb.setStatus(student.getStatus());
                 return studentRepository.save(studentFromDb);
             }).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
     }
@@ -72,6 +84,11 @@ public class StudentServiceImpl implements StudentService {
                     if (!StringUtils.isEmpty(student.getLastName())) {
                         studentFromDb.setLastName(student.getLastName());
                     }
+
+                    if(!StringUtils.isEmpty(student.getStatus())){
+                        studentFromDb.setStatus(student.getStatus());
+                    }
+
                     return studentRepository.save(studentFromDb);
                 }).orElseThrow(() ->new StudentException(StudentError.STUDENT_NOT_FOUND));
     }

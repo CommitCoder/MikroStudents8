@@ -23,8 +23,8 @@ public class StudentController {
 
 
     @GetMapping
-    public List<Student> getStudents() {
-        return studentService.getStudents();
+    public List<Student> getStudents(@RequestParam(required = false) Student.Status status) {
+        return studentService.getStudents(status);
     }
 
     // podawany Json w metodzie POST zostanie z automatu zmapowany na obiekt Javowy Student
@@ -64,7 +64,6 @@ public class StudentController {
     public Student patchStudent(@PathVariable Long id, @RequestBody Student student){
         return studentService.patchStudent(id, student);
     }
-
 
 
 }
